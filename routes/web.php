@@ -5,9 +5,10 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\WildPokemonController;
 use Illuminate\Support\Facades\Route;
 
+// Vista de Bienvenida pública
 Route::get('/', function () {
-    return redirect()->route('login');
-});
+    return view('welcome');
+})->name('welcome');
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboard', fn () => redirect()->route('wild.index'))->name('dashboard');
@@ -16,8 +17,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/wild', [WildPokemonController::class, 'index'])->name('wild.index');
     Route::post('/wild/catch', [WildPokemonController::class, 'catch'])->name('wild.catch');
 
-    // Inventario
+    // Inventario y Captura Exitosa
     Route::get('/inventory', [InventoryController::class, 'index'])->name('inventory.index');
+    Route::get('/inventory/{pokemon}/success', [InventoryController::class, 'captured'])->name('inventory.success');
     Route::patch('/inventory/{pokemon}/nickname', [InventoryController::class, 'updateNickname'])->name('inventory.nickname');
     Route::patch('/inventory/{pokemon}/favorite', [InventoryController::class, 'toggleFavorite'])->name('inventory.favorite');
     Route::delete('/inventory/{pokemon}', [InventoryController::class, 'release'])->name('inventory.release');

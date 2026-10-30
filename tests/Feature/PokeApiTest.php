@@ -1,7 +1,7 @@
 <?php
 
-use App\Models\User;
 use App\Models\CapturedPokemon;
+use App\Models\User;
 use Illuminate\Support\Facades\Http;
 
 test('se muestra la vista de la zona salvaje simulando la respuesta de PokeAPI', function () {
@@ -42,7 +42,8 @@ test('un entrenador puede capturar un pokemon con masterball asegurada (100%)', 
         'nickname' => 'Chispas',
     ]);
 
-    $response->assertRedirect(route('inventory.index'));
+    $pokemon = CapturedPokemon::firstWhere('name', 'Pikachu');
+    $response->assertRedirect(route('inventory.success', $pokemon));
     $this->assertDatabaseHas('captured_pokemons', [
         'user_id' => $user->id,
         'name' => 'Pikachu',

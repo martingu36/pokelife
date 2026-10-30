@@ -12,8 +12,19 @@ export default {
     theme: {
         extend: {
             fontFamily: {
-                sans: ['Figtree', ...defaultTheme.fontFamily.sans],
+                sans: ['Outfit', ...defaultTheme.fontFamily.sans],
+                pixel: ['"Press Start 2P"', 'cursive', ...defaultTheme.fontFamily.sans],
             },
+            colors: {
+                poke: {
+                    red: '#EE1515',
+                    darkred: '#CC0000',
+                    blue: '#3B4CCA',
+                    yellow: '#FFDE00',
+                    gold: '#B3A125',
+                    dark: '#1E293B',
+                }
+            }
         },
     },
 

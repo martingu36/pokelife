@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\CapturedPokemon;
+use App\Services\PokeApiService;
 use Illuminate\Http\Request;
 
 class InventoryController extends Controller
@@ -63,5 +64,16 @@ class InventoryController extends Controller
         if ($pokemon->user_id !== auth()->id()) {
             abort(403);
         }
+    }
+
+    public function captured(CapturedPokemon $pokemon, PokeApiService $pokeApi)
+    {
+        if ($pokemon->user_id !== auth()->id()) {
+            abort(403);
+        }
+
+        $details = $pokeApi->getPokemon($pokemon->pokeapi_id);
+
+        return view('inventory.captured', compact('pokemon', 'details'));
     }
 }

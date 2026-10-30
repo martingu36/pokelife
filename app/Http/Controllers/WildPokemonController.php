@@ -38,8 +38,9 @@ class WildPokemonController extends Controller
             return back()->with('error', "¡El {$validated['name']} salvaje ha escapado de la {$validated['pokeball_type']}!");
         }
 
-        CapturedPokemon::create([
-            'user_id' => auth()->id(),
+        // Cambiamos el return final en catch():
+        $captured = CapturedPokemon::create([
+            'user_id' => $request->user()->id,
             'pokeapi_id' => $validated['pokeapi_id'],
             'name' => $validated['name'],
             'nickname' => $validated['nickname'],
@@ -50,7 +51,6 @@ class WildPokemonController extends Controller
             'captured_at' => now(),
         ]);
 
-        return redirect()->route('inventory.index')
-            ->with('success', "¡Felicidades! Capturaste a {$validated['name']}.");
+        return redirect()->route('inventory.success', $captured);
     }
 }
