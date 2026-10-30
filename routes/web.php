@@ -8,6 +8,10 @@ use Illuminate\Support\Facades\Route;
 
 // Vista de Bienvenida pública
 Route::get('/', function () {
+    if (auth()->check()) {
+        return redirect()->route('home');
+    }
+
     return view('welcome');
 })->name('welcome');
 

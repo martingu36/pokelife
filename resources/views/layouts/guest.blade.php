@@ -8,7 +8,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <title>{{ config('app.name', 'PokeLife') }}</title>
-    <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/poke-ball.png">
+    <link rel="icon" type="image/png" href="{{ asset('img/logo.png') }}">
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -17,15 +17,17 @@
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body class="font-sans text-slate-800 dark:text-slate-100 bg-slate-100 dark:bg-slate-900 min-h-screen flex flex-col justify-center items-center p-4 transition-colors duration-200">
-    <div class="mb-6">
-        <a href="/">
-            <x-application-logo />
-        </a>
-    </div>
+<body class="font-sans text-slate-900 dark:text-slate-100 antialiased bg-slate-100 dark:bg-slate-900 transition-colors duration-200">
+    <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 px-4">
+        <div>
+            <a href="/">
+                <x-application-logo class="w-20 h-20 fill-current text-slate-500" />
+            </a>
+        </div>
 
-    <div class="w-full sm:max-w-md bg-white dark:bg-slate-800 border-2 border-poke-red rounded-xl shadow-2xl p-6 sm:p-8">
-        {{ $slot }}
+        <div class="w-full sm:max-w-md mt-6 px-6 py-6 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-md overflow-hidden sm:rounded-2xl">
+            {{ $slot }}
+        </div>
     </div>
 </body>
 </html>

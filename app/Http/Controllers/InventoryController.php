@@ -8,16 +8,61 @@ use Illuminate\Http\Request;
 
 class InventoryController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $pokemons = auth()->user()->capturedPokemons()
+        $query = auth()->user()->capturedPokemons()
             ->orderBy('is_favorite', 'desc')
-            ->orderBy('created_at', 'desc')
-            ->get();
+            ->orderBy('created_at', 'desc');
 
-        $favoriteCount = $pokemons->where('is_favorite', true)->count();
+        // Filtro 1: Búsqueda por Nombre o Mote
+        if ($request->filled('search')) {
+            $search = trim($request->input('search'));
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                    ->orWhere('nickname', 'like', "%{$search}%");
+            });
+        }
 
-        return view('inventory.index', compact('pokemons', 'favoriteCount'));
+        // Filtro 2: Filtro por Tipo
+        if ($request->filled('type')) {
+            $type = trim($request->input('type'));
+            $query->where('types', 'like', "%{$type}%");
+        }
+
+        // Filtro 3: Solo Favoritos
+        if ($request->boolean('favorites')) {
+            $query->where('is_favorite', true);
+        }
+
+        $pokemons = $query->get();
+
+        // Obtener la lista dinámica de tipos capturados por el usuario para el desplegable
+        $availableTypes = auth()->user()->capturedPokemons()
+            ->pluck('types')
+            ->flatMap(fn ($t) => array_map('trim', explode('/', strtolower($t))))
+            ->unique()
+            ->sort()
+            ->values();
+
+        $favoriteCount = auth()->user()->capturedPokemons()->where('is_favorite', true)->count();
+
+        return view('inventory.index', [
+            'pokemons' => $pokemons,
+            'favoriteCount' => $favoriteCount,
+            'availableTypes' => $availableTypes,
+            'filters' => $request->only(['search', 'type', 'favorites']),
+        ]);
+    }
+
+    public function captured(CapturedPokemon $pokemon, PokeApiService $pokeApi)
+    {
+        if ($pokemon->user_id !== auth()->id()) {
+            abort(403);
+        }
+
+        $details = $pokeApi->getPokemon($pokemon->pokeapi_id);
+
+        return view('inventory.captured', compact('pokemon', 'details'));
     }
 
     public function updateNickname(Request $request, CapturedPokemon $pokemon)
@@ -64,16 +109,5 @@ class InventoryController extends Controller
         if ($pokemon->user_id !== auth()->id()) {
             abort(403);
         }
-    }
-
-    public function captured(CapturedPokemon $pokemon, PokeApiService $pokeApi)
-    {
-        if ($pokemon->user_id !== auth()->id()) {
-            abort(403);
-        }
-
-        $details = $pokeApi->getPokemon($pokemon->pokeapi_id);
-
-        return view('inventory.captured', compact('pokemon', 'details'));
     }
 }

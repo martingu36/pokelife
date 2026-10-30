@@ -17,10 +17,69 @@
             </div>
         @endif
 
+        @if (session('error'))
+            <div class="p-4 bg-red-100 border-l-4 border-red-500 text-red-800 dark:bg-red-900/80 dark:text-red-200 font-medium rounded-lg">
+                {{ session('error') }}
+            </div>
+        @endif
+
+        <!-- Barra de Filtros y Búsqueda -->
+        <div class="bg-white dark:bg-slate-800 p-4 sm:p-5 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-md">
+            <form action="{{ route('inventory.index') }}" method="GET" class="flex flex-col md:flex-row gap-3 items-center">
+                <!-- Buscar por texto -->
+                <div class="flex-1 w-full">
+                    <input type="text" 
+                           name="search" 
+                           value="{{ $filters['search'] ?? '' }}" 
+                           placeholder="Buscar por nombre o mote..." 
+                           class="w-full bg-slate-50 dark:bg-slate-900 border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white rounded-xl text-xs focus:border-poke-yellow focus:ring-poke-yellow">
+                </div>
+
+                <!-- Filtrar por Tipo -->
+                <div class="w-full md:w-48">
+                    <select name="type" class="w-full bg-slate-50 dark:bg-slate-900 border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white rounded-xl text-xs focus:border-poke-yellow focus:ring-poke-yellow">
+                        <option value="">Todos los tipos</option>
+                        @foreach($availableTypes as $t)
+                            <option value="{{ $t }}" {{ ($filters['type'] ?? '') === $t ? 'selected' : '' }}>
+                                {{ ucfirst($t) }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <!-- Interruptor Solo Favoritos -->
+                <label class="flex items-center gap-2 cursor-pointer bg-slate-50 dark:bg-slate-900 px-3 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 w-full md:w-auto">
+                    <input type="checkbox" 
+                           name="favorites" 
+                           value="1" 
+                           {{ !empty($filters['favorites']) ? 'checked' : '' }} 
+                           class="rounded text-poke-yellow focus:ring-poke-yellow">
+                    <span class="text-xs font-bold text-slate-700 dark:text-slate-300 whitespace-nowrap">⭐ Solo Favoritos</span>
+                </label>
+
+                <!-- Acciones -->
+                <div class="flex gap-2 w-full md:w-auto">
+                    <button type="submit" class="flex-1 md:flex-initial text-xs font-bold bg-poke-yellow text-slate-900 px-4 py-2.5 rounded-xl hover:bg-yellow-300 transition">
+                        Filtrar
+                    </button>
+                    @if(!empty($filters['search']) || !empty($filters['type']) || !empty($filters['favorites']))
+                        <a href="{{ route('inventory.index') }}" class="flex-1 md:flex-initial text-xs font-bold text-center bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300 px-4 py-2.5 rounded-xl hover:bg-slate-300 dark:hover:bg-slate-600 transition">
+                            Limpiar
+                        </a>
+                    @endif
+                </div>
+            </form>
+        </div>
+
         @if($pokemons->isEmpty())
             <div class="bg-white dark:bg-slate-800 p-8 rounded-2xl border border-slate-200 dark:border-slate-700 text-center space-y-4">
-                <p class="text-slate-500 dark:text-slate-400 text-base">Aún no has capturado ningún Pokémon.</p>
-                <a href="{{ route('wild.index') }}" class="inline-block text-xs bg-poke-red text-white font-bold px-6 py-3 rounded-xl hover:bg-poke-darkred transition shadow-lg">Ir a la Zona Salvaje</a>
+                @if(!empty($filters['search']) || !empty($filters['type']) || !empty($filters['favorites']))
+                    <p class="text-slate-500 dark:text-slate-400 text-base">No se han encontrado Pokémon en tu inventario que coincidan con los filtros.</p>
+                    <a href="{{ route('inventory.index') }}" class="inline-block text-xs bg-slate-700 text-white font-bold px-4 py-2 rounded-xl">Limpiar Filtros</a>
+                @else
+                    <p class="text-slate-500 dark:text-slate-400 text-base">Aún no has capturado ningún Pokémon.</p>
+                    <a href="{{ route('wild.index') }}" class="inline-block text-xs bg-poke-red text-white font-bold px-6 py-3 rounded-xl hover:bg-poke-darkred transition shadow-lg">Ir a la Zona Salvaje</a>
+                @endif
             </div>
         @else
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
