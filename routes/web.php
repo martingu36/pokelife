@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\InventoryController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\WildPokemonController;
@@ -11,7 +12,8 @@ Route::get('/', function () {
 })->name('welcome');
 
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::get('/dashboard', fn () => redirect()->route('wild.index'))->name('dashboard');
+    Route::get('/home', HomeController::class)->name('home');
+    Route::get('/dashboard', fn () => redirect()->route('home'))->name('dashboard');
 
     // Zona Salvaje
     Route::get('/wild', [WildPokemonController::class, 'index'])->name('wild.index');

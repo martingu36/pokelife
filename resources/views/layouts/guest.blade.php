@@ -1,5 +1,7 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}"
+      x-data="{ darkMode: localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches) }"
+      x-bind:class="{ 'dark': darkMode }">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -11,18 +13,18 @@
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&family=Press+Start+2P&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Press+Start+2P&display=swap" rel="stylesheet">
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body class="font-sans text-slate-100 bg-slate-900 min-h-screen flex flex-col justify-center items-center p-4">
+<body class="font-sans text-slate-800 dark:text-slate-100 bg-slate-100 dark:bg-slate-900 min-h-screen flex flex-col justify-center items-center p-4 transition-colors duration-200">
     <div class="mb-6">
         <a href="/">
             <x-application-logo />
         </a>
     </div>
 
-    <div class="w-full sm:max-w-md bg-slate-800 border-2 border-poke-red rounded-xl shadow-2xl p-6 sm:p-8">
+    <div class="w-full sm:max-w-md bg-white dark:bg-slate-800 border-2 border-poke-red rounded-xl shadow-2xl p-6 sm:p-8">
         {{ $slot }}
     </div>
 </body>
