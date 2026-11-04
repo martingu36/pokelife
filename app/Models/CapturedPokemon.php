@@ -17,22 +17,39 @@ class CapturedPokemon extends Model
         'pokeapi_id',
         'name',
         'nickname',
-        'types',
-        'sprite_url',
         'level',
+        'category',
+        'gender',
+        'height',
+        'weight',
+        'sprite_url',
+        'types',
+        'weaknesses',
+        'hp',
+        'attack',
+        'defense',
+        'special_attack',
+        'special_defense',
+        'speed',
         'pokeball_type',
         'is_favorite',
-        'captured_at',
+        'is_shiny',
     ];
 
-    protected function casts(): array
-    {
-        return [
-            'is_favorite' => 'boolean',
-            'captured_at' => 'datetime',
-            'level' => 'integer',
-        ];
-    }
+    protected $casts = [
+        'types' => 'array',
+        'weaknesses' => 'array',
+        'is_favorite' => 'boolean',
+        'is_shiny' => 'boolean',
+        'height' => 'decimal:2',
+        'weight' => 'decimal:2',
+        'hp' => 'integer',
+        'attack' => 'integer',
+        'defense' => 'integer',
+        'special_attack' => 'integer',
+        'special_defense' => 'integer',
+        'speed' => 'integer',
+    ];
 
     public function user(): BelongsTo
     {

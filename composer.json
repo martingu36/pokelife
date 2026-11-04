@@ -76,6 +76,9 @@
             "@php vendor/bin/pint",
             "@php artisan test"
         ],
+        "format": [
+            "@php vendor/bin/pint"
+        ],
         "ci": [
             "@php vendor/bin/pint --test",
             "@php artisan test"
