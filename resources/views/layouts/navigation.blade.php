@@ -1,112 +1,112 @@
-<nav x-data="{ open: false }" class="bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800">
-    <!-- Primary Navigation Menu -->
+<!-- resources/views/layouts/navigation.blade.php -->
+
+<nav x-data="{ open: false }" class="bg-red-600 dark:bg-red-700 border-b border-red-700/60 shadow-md">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between h-16">
-            <div class="flex">
-                <!-- Logo / Inicio -->
+            <div class="flex items-center gap-8">
+                <!-- Logo -->
                 <div class="shrink-0 flex items-center">
-                    <a href="{{ route('wild.index') }}" class="flex items-center gap-2">
-                        <span class="font-pixel text-poke-yellow text-sm tracking-wider">POKÉLIFE</span>
+                    <a href="{{ route('wild.index') }}" class="flex items-center gap-2.5 group">
+                        <img 
+                            src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/poke-ball.png" 
+                            alt="Pokéball" 
+                            class="w-6 h-6 object-contain group-hover:rotate-12 transition-transform duration-300"
+                        >
+                        <span class="font-pixel text-amber-300 group-hover:text-amber-200 text-xs tracking-wider">
+                            POKÉLIFE
+                        </span>
                     </a>
                 </div>
 
-                <!-- Navigation Links -->
-                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                    <x-nav-link :href="route('wild.index')" :active="request()->routeIs('wild.*')">
-                        {{ __('Zona Salvaje') }}
-                    </x-nav-link>
-                    <x-nav-link :href="route('inventory.index')" :active="request()->routeIs('inventory.*')">
-                        {{ __('Mi Inventario') }}
-                    </x-nav-link>
+                <!-- Enlaces de Navegación -->
+                <div class="hidden space-x-1 sm:flex sm:items-center">
+                    <a href="{{ route('wild.index') }}" 
+                       class="px-3.5 py-1.5 rounded-lg text-xs font-semibold uppercase tracking-wider transition-colors duration-200 {{ request()->routeIs('wild.*') ? 'bg-black/20 text-amber-300' : 'text-red-100 hover:text-white hover:bg-white/10' }}">
+                        Zona Salvaje
+                    </a>
+
+                    <a href="{{ route('inventory.index') }}" 
+                       class="px-3.5 py-1.5 rounded-lg text-xs font-semibold uppercase tracking-wider transition-colors duration-200 {{ request()->routeIs('inventory.*') ? 'bg-black/20 text-amber-300' : 'text-red-100 hover:bg-white/10 hover:text-white' }}">
+                        Mi Inventario
+                    </a>
                 </div>
             </div>
 
-            <!-- Settings Dropdown -->
+            <!-- Menú de Usuario (Escritorio) -->
             <div class="hidden sm:flex sm:items-center sm:ms-6">
                 <x-dropdown align="right" width="48">
                     <x-slot name="trigger">
-                        <button
-                            class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-slate-500 dark:text-slate-400 bg-white dark:bg-slate-900 hover:text-slate-700 dark:hover:text-slate-300 focus:outline-none transition ease-in-out duration-150">
-                            <div>{{ Auth::user()->name }}</div>
-
-                            <div class="ms-1">
-                                <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg"
-                                    viewBox="0 0 20 20">
-                                    <path fill-rule="evenodd"
-                                        d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                                        clip-rule="evenodd" />
-                                </svg>
-                            </div>
+                        <button class="inline-flex items-center gap-2.5 px-3 py-1.5 rounded-lg text-xs font-medium text-white hover:bg-white/10 focus:outline-none transition-colors duration-200">
+                            <span class="w-6 h-6 rounded-full bg-white/20 text-white flex items-center justify-center font-bold text-[10px] uppercase">
+                                {{ mb_substr(Auth::user()->name, 0, 1) }}
+                            </span>
+                            <span>{{ Auth::user()->name }}</span>
+                            <svg class="w-3.5 h-3.5 text-red-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                            </svg>
                         </button>
                     </x-slot>
 
                     <x-slot name="content">
-                        <!-- Menú desplegable escritorio -->
                         <x-dropdown-link :href="Route::has('profile.edit') ? route('profile.edit') : '#'">
-                            {{ __('Perfil') }}
+                            Perfil de Entrenador
                         </x-dropdown-link>
-                        <!-- Authentication -->
+
+                        <!-- Cerrar Sesión -->
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf
-
                             <x-dropdown-link :href="route('logout')"
-                                onclick="event.preventDefault();
-                                                this.closest('form').submit();">
-                                {{ __('Cerrar Sesión') }}
+                                    onclick="event.preventDefault(); this.closest('form').submit();">
+                                Cerrar Sesión
                             </x-dropdown-link>
                         </form>
                     </x-slot>
                 </x-dropdown>
             </div>
 
-            <!-- Hamburger -->
+            <!-- Botón Hamburguesa (Móvil) -->
             <div class="-me-2 flex items-center sm:hidden">
-                <button @click="open = ! open"
-                    class="inline-flex items-center justify-center p-2 rounded-md text-slate-400 hover:text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 focus:outline-none transition duration-150 ease-in-out">
+                <button @click="open = ! open" class="inline-flex items-center justify-center p-2 rounded-lg text-red-100 hover:text-white hover:bg-white/10 focus:outline-none transition-colors duration-200">
                     <svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
-                        <path :class="{ 'hidden': open, 'inline-flex': !open }" class="inline-flex"
-                            stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M4 6h16M4 12h16M4 18h16" />
-                        <path :class="{ 'inline-flex': open, 'hidden': !open }" class="hidden" stroke-linecap="round"
-                            stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                        <path :class="{'hidden': open, 'inline-flex': ! open }" class="inline-flex" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                        <path :class="{'inline-flex': open, 'hidden': ! open }" class="hidden" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                     </svg>
                 </button>
             </div>
         </div>
     </div>
 
-    <!-- Responsive Navigation Menu -->
-    <div :class="{ 'block': open, 'hidden': !open }" class="hidden sm:hidden">
-        <div class="pt-2 pb-3 space-y-1">
-            <x-responsive-nav-link :href="route('wild.index')" :active="request()->routeIs('wild.*')">
-                {{ __('Zona Salvaje') }}
-            </x-responsive-nav-link>
-            <x-responsive-nav-link :href="route('inventory.index')" :active="request()->routeIs('inventory.*')">
-                {{ __('Mi Inventario') }}
-            </x-responsive-nav-link>
+    <!-- Menú Responsive (Móvil) -->
+    <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden bg-red-700/95 border-t border-red-700/60">
+        <div class="py-2 space-y-1 px-4">
+            <a href="{{ route('wild.index') }}" class="block px-3 py-2 rounded-lg text-xs font-semibold uppercase tracking-wider transition-colors duration-200 {{ request()->routeIs('wild.*') ? 'bg-black/20 text-amber-300' : 'text-red-100 hover:bg-white/10 hover:text-white' }}">
+                Zona Salvaje
+            </a>
+            <a href="{{ route('inventory.index') }}" class="block px-3 py-2 rounded-lg text-xs font-semibold uppercase tracking-wider transition-colors duration-200 {{ request()->routeIs('inventory.*') ? 'bg-black/20 text-amber-300' : 'text-red-100 hover:bg-white/10 hover:text-white' }}">
+                Mi Inventario
+            </a>
         </div>
 
-        <!-- Responsive Settings Options -->
-        <div class="pt-4 pb-1 border-t border-slate-200 dark:border-slate-800">
-            <div class="px-4">
-                <div class="font-medium text-base text-slate-800 dark:text-slate-200">{{ Auth::user()->name }}</div>
-                <div class="font-medium text-sm text-slate-500">{{ Auth::user()->email }}</div>
+        <div class="pt-3 pb-3 border-t border-red-700/60 px-4">
+            <div class="flex items-center gap-2 mb-2">
+                <span class="w-6 h-6 rounded-full bg-white/20 text-white flex items-center justify-center font-bold text-[10px] uppercase">
+                    {{ mb_substr(Auth::user()->name, 0, 1) }}
+                </span>
+                <div>
+                    <div class="font-bold text-xs text-white">{{ Auth::user()->name }}</div>
+                    <div class="font-normal text-[11px] text-red-200">{{ Auth::user()->email }}</div>
+                </div>
             </div>
 
-            <div class="mt-3 space-y-1">
-                <!-- Menú desplegable móvil -->
-                <x-responsive-nav-link :href="Route::has('profile.edit') ? route('profile.edit') : '#'">
-                    {{ __('Perfil') }}
-                </x-responsive-nav-link>
-
+            <div class="mt-2 space-y-1">
+                <a href="{{ Route::has('profile.edit') ? route('profile.edit') : '#' }}" class="block text-xs text-red-100 hover:text-white font-medium py-1">
+                    Perfil de Entrenador
+                </a>
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
-
-                    <x-responsive-nav-link :href="route('logout')"
-                        onclick="event.preventDefault();
-                                        this.closest('form').submit();">
-                        {{ __('Cerrar Sesión') }}
-                    </x-responsive-nav-link>
+                    <button type="submit" class="block w-full text-left text-xs text-red-200 hover:text-white font-medium py-1">
+                        Cerrar Sesión
+                    </button>
                 </form>
             </div>
         </div>

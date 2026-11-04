@@ -1,5 +1,5 @@
 <x-app-layout>
-    <div class="max-w-4xl mx-auto space-y-6">
+    <div class="max-w-4xl mx-auto space-y-6" x-cloak>
 
         <!-- Mensaje de fallo al intentar capturar -->
         @if (session('capture_failed'))
@@ -26,17 +26,44 @@
 
             <div class="flex flex-col md:flex-row items-center gap-8">
                 <!-- Visualización del Sprite -->
+                <!-- Visualización del Sprite y Métricas del Pokémon -->
                 <div
                     class="flex flex-col items-center justify-center bg-slate-50 dark:bg-slate-950/60 rounded-2xl p-6 border border-slate-100 dark:border-slate-800/80 w-full md:w-1/2">
                     <img src="{{ $wildPokemon['sprite_url'] }}" alt="{{ $wildPokemon['name'] }}"
                         class="w-48 h-48 sm:w-56 sm:h-56 object-contain drop-shadow-2xl hover:scale-105 transition-transform duration-300">
 
-                    <div class="flex items-center gap-2 mt-3">
-                        <span class="text-xs text-slate-400 font-semibold">Nivel {{ $wildPokemon['level'] }}</span>
-                        <span class="text-slate-300">•</span>
-                        <span class="text-xs text-slate-400">{{ $wildPokemon['height'] }} m</span>
-                        <span class="text-slate-300">•</span>
-                        <span class="text-xs text-slate-400">{{ $wildPokemon['weight'] }} kg</span>
+                    <!-- Tarjetas de Métricas (Nivel, Altura, Peso) -->
+                    <div
+                        class="w-full grid grid-cols-3 gap-2.5 mt-4 pt-4 border-t border-slate-200/60 dark:border-slate-800/60">
+                        <!-- Nivel -->
+                        <div
+                            class="bg-amber-500/10 dark:bg-amber-500/15 border border-amber-500/30 rounded-xl p-2.5 flex flex-col items-center justify-center text-center">
+                            <span
+                                class="text-[9px] font-bold uppercase tracking-wider text-amber-600 dark:text-amber-400">Nivel</span>
+                            <span class="font-pixel text-xs sm:text-sm text-amber-600 dark:text-amber-300 mt-0.5">
+                                Lv. {{ $wildPokemon['level'] }}
+                            </span>
+                        </div>
+
+                        <!-- Altura -->
+                        <div
+                            class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800/80 rounded-xl p-2.5 flex flex-col items-center justify-center text-center shadow-sm">
+                            <span class="text-[9px] font-bold uppercase tracking-wider text-slate-400">Altura</span>
+                            <span class="font-bold text-xs sm:text-sm text-slate-800 dark:text-slate-200 mt-0.5">
+                                {{ $wildPokemon['height'] }} <span
+                                    class="text-[10px] text-slate-400 font-normal">m</span>
+                            </span>
+                        </div>
+
+                        <!-- Peso -->
+                        <div
+                            class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800/80 rounded-xl p-2.5 flex flex-col items-center justify-center text-center shadow-sm">
+                            <span class="text-[9px] font-bold uppercase tracking-wider text-slate-400">Peso</span>
+                            <span class="font-bold text-xs sm:text-sm text-slate-800 dark:text-slate-200 mt-0.5">
+                                {{ $wildPokemon['weight'] }} <span
+                                    class="text-[10px] text-slate-400 font-normal">kg</span>
+                            </span>
+                        </div>
                     </div>
                 </div>
 

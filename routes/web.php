@@ -1,9 +1,9 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\WildPokemonController;
 use App\Http\Controllers\InventoryController;
-use App\Http\Controllers\ProfileController; // Importar ProfileController
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\WildPokemonController;
+use Illuminate\Support\Facades\Route; // Importar ProfileController
 
 Route::get('/', function () {
     return redirect()->route('wild.index');
