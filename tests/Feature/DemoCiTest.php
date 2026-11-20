@@ -1,7 +1,7 @@
 <?php
 
 test('verificacion de despliegue continuo en CI', function () {
-    $estadoCorrecto = true;
+    $estadoCorrecto = false;
 
     expect($estadoCorrecto)->toBeTrue();
 });
