@@ -1,0 +1,66 @@
+name: PokeLife Wasmer Automerge
+
+on:
+  push:
+    branches: [martin]
+
+permissions:
+  contents: write
+
+jobs:
+  tests:
+    name: Linter y Tests (Pest)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Descargar código del repositorio
+        uses: actions/checkout@v4
+
+      - name: Configurar PHP 8.3 y extensiones SQLite
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.3"
+          extensions: mbstring, xml, ctype, iconv, intl, pdo_sqlite, sqlite3, curl, zip
+          coverage: none
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Instalar dependencias de Composer
+        run: composer install --no-interaction --prefer-dist --optimize-autoloader
+
+      - name: Preparar entorno de pruebas
+        run: |
+          cp .env.example .env
+          php artisan key:generate
+
+      - name: Compilar assets (Vite)
+        run: |
+          npm ci
+          npm run build
+
+      - name: Ejecutar Pint y Tests (Pest)
+        run: composer ci
+
+  automerge:
+    name: Automerge martin -> main
+    needs: tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Descargar historial completo del repositorio
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Hacer merge de martin en main y subir cambios
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git fetch origin main
+          git checkout -B main origin/main
+          git merge origin/martin --no-edit
+          git push origin main

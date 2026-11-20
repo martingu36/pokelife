@@ -3,30 +3,35 @@
 use App\Models\CapturedPokemon;
 use App\Models\User;
 
-test('un entrenador puede acceder a su centro de entrenador home', function () {
+test('la ruta home redirige a la zona salvaje', function () {
     $user = User::factory()->create();
 
     $response = $this->actingAs($user)->get(route('home'));
 
-    $response->assertStatus(200);
-    $response->assertSee('Total Capturas');
+    $response->assertRedirect(route('wild.index'));
 });
 
 test('un entrenador puede filtrar su inventario por nombre y tipo', function () {
     $user = User::factory()->create();
 
-    $pikachu = CapturedPokemon::factory()->create([
+    CapturedPokemon::create([
         'user_id' => $user->id,
+        'pokeapi_id' => 25,
         'name' => 'Pikachu',
         'nickname' => 'Chispas',
-        'types' => 'Electric',
+        'sprite_url' => 'https://example.com/pikachu.png',
+        'types' => ['electric'],
+        'weaknesses' => ['ground'],
     ]);
 
-    $charmander = CapturedPokemon::factory()->create([
+    CapturedPokemon::create([
         'user_id' => $user->id,
+        'pokeapi_id' => 4,
         'name' => 'Charmander',
         'nickname' => 'Chispa',
-        'types' => 'Fire',
+        'sprite_url' => 'https://example.com/charmander.png',
+        'types' => ['fire'],
+        'weaknesses' => ['water', 'ground', 'rock'],
     ]);
 
     // Filtrar por término "Chispas"
